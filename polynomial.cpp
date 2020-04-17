@@ -33,13 +33,34 @@ Polynomial::Polynomial(const Polynomial& polynomial): _degree(polynomial._degree
 	}
 }
 Polynomial::~Polynomial(){
-	// DO THIS FIRST TO PREVENT MEMORY LEAKS!
-}
+	if(_coefficients != nullptr)
+	    delete [] _coefficients;
+	}
+
 const Polynomial Polynomial::Sum(const Polynomial& rhs)const{
-	return Polynomial(0);
+    // check _degree
+    size_t tempDegree;
+    if(_degree >= rhs._degree)
+        tempDegree = _degree;
+    else
+        tempDegree = rhs._degree;
+    Polynomial retVal(tempDegree);
+    for (size_t i = 0; i < tempDegree + 1; i++) {
+        retVal._coefficients[i] = _coefficients[i] + rhs._coefficients[i];
+    }
+    return retVal;
 }
 const Polynomial Polynomial::Subtract(const Polynomial& rhs)const{
-	return Polynomial(0);
+    size_t tempDegree;
+    if(_degree >= rhs._degree)
+        tempDegree = _degree;
+    else
+        tempDegree = rhs._degree;
+    Polynomial retVal(tempDegree);
+    for (size_t i = 0; i < tempDegree + 1; i++) {
+        retVal._coefficients[i] = _coefficients[i] - rhs._coefficients[i];
+    }
+    return retVal;
 }
 const Polynomial Polynomial::Minus()const{
 	Polynomial retVal(*this);
@@ -49,7 +70,15 @@ const Polynomial Polynomial::Minus()const{
 	return retVal;
 }
 const Polynomial Polynomial::Multiply(const Polynomial& rhs)const{
-	return Polynomial(0);
+    size_t tempDegree;
+    tempDegree = _degree + rhs._degree;
+    Polynomial retVal(tempDegree);
+    for (size_t i = 0; i <= _degree; i++) {
+        for (size_t j = 0; j <= rhs._degree; j++) {
+            retVal._coefficients[i + j] += _coefficients[i] * rhs._coefficients[j];
+        }
+    }
+    return retVal;
 }
 const Polynomial Polynomial::Divide(const Polynomial& rhs)const{
 	return Polynomial(0);

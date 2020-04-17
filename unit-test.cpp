@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
 		cout << "\tSUM FAILED" << endl;
 	}
 
-	if (b.Subtract(a).Equals(w)){
+   	if (b.Subtract(a).Equals(w)){
 		cout << "\tSUBTRACT PASSED " << ++total << endl;
 	}else{
 		cout << "\tSUBTRACT FAILED" << endl;
