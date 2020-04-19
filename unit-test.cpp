@@ -39,7 +39,6 @@ int main(int argc, char* argv[]){
 	w.Read(answers[4]);
 	x.Read(answers[5]);
 
-
 	float total = 0;
 	if (a.Sum(b).Equals(s)){
 		cout << "\tSUM PASSED " << ++total << endl;
@@ -58,7 +57,6 @@ int main(int argc, char* argv[]){
 	}else{
 		cout << "\tMULTIPLY FAILED" << endl;
 	}
-
 	if (a.Derive().Equals(x)){
 		cout << "\tMULTIPLY PASSED " << ++total << endl;
 	}else{
@@ -82,14 +80,12 @@ int main(int argc, char* argv[]){
 	}else{
 		cout << "\tINTEGRATE FAILED" << endl;
 	}
-
 	if (d.Divide(e).Equals(u)){
 		cout << "\tDIVIDE PASSED " << ++total << endl;
 	}else{
 		cout << "\tDIVIDE FAILED" << endl;
 	}
 	cout << "UNIT TEST FINAL GRADE = " << (total / 5 * 100) << endl;
-
 
 
 	return 0;

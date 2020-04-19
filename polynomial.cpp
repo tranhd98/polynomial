@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cfloat>
+#include<cmath>
 
 using std::istream;
 using std::ostream;
@@ -46,19 +47,49 @@ const Polynomial Polynomial::Sum(const Polynomial& rhs)const{
         tempDegree = rhs._degree;
     Polynomial retVal(tempDegree);
     for (size_t i = 0; i < tempDegree + 1; i++) {
-        retVal._coefficients[i] = _coefficients[i] + rhs._coefficients[i];
+        size_t rhsLim = rhs._degree + 1;
+        size_t selfLim = _degree + 1;
+        float r = 0.0f, l = 0.0f;
+        if(i < rhsLim) { // check if i > rhsLim -> memory leak
+            r = rhs._coefficients[i];
+        }
+        else {
+            r = 0.0;
+        }
+        if(i < selfLim){ // check if i > thisLim -> memory leak
+            l = _coefficients[i];
+        }
+        else{
+            l = 0.0;
+        }
+        retVal._coefficients[i] = l + r; // sum of _coefficients and rhs _coefficients
     }
     return retVal;
 }
 const Polynomial Polynomial::Subtract(const Polynomial& rhs)const{
     size_t tempDegree;
-    if(_degree >= rhs._degree)
+    if(_degree > rhs._degree)
         tempDegree = _degree;
     else
         tempDegree = rhs._degree;
     Polynomial retVal(tempDegree);
     for (size_t i = 0; i < tempDegree + 1; i++) {
-        retVal._coefficients[i] = _coefficients[i] - rhs._coefficients[i];
+        size_t rhsLim = rhs._degree + 1;
+        size_t selfLim = _degree + 1;
+        float r = 0.0f, l = 0.0f;
+        if (i < rhsLim) { // check if i > rhsLim -> memory leak
+            r = rhs._coefficients[i];
+        }
+        else {
+            r = 0.0f;
+        }
+        if (i < selfLim) { // check if i > thisLim -> memory leak
+            l = _coefficients[i];
+        }
+        else {
+            l = 0.0;
+        }
+        retVal._coefficients[i] = l - r; // subtract of _coefficients and rhs _coefficients
     }
     return retVal;
 }
@@ -81,17 +112,47 @@ const Polynomial Polynomial::Multiply(const Polynomial& rhs)const{
     return retVal;
 }
 const Polynomial Polynomial::Divide(const Polynomial& rhs)const{
-	return Polynomial(0);
+    if(_degree < rhs._degree) // check if _degree < rhs._degree
+	    return Polynomial(0); // return value 0 with degree 0
+    size_t degree = _degree - rhs._degree;
+	Polynomial retVal(degree);
+    size_t i = degree;
+    for(int j = _degree; j > 0; j--){
+        for(int z = rhs._degree; z > 0; z--){
+            if (rhs._coefficients[z] != 0)
+            {
+                retVal._coefficients[i] = _coefficients[j] / rhs._coefficients[z];
+                _coefficients[j - 1] -= retVal._coefficients[i] * rhs._coefficients[z - 1];
+            }
+        }
+        i--;
+    }
+    return retVal;
 }
 const Polynomial Polynomial::Derive()const{
-	return Polynomial(0);
+    Polynomial retVal(_degree - 1);
+    for(size_t i = 0; i < _degree ;i++){
+        size_t tempDegree = i + 1;
+        retVal._coefficients[i] = _coefficients[tempDegree] * tempDegree;
+    }
+    return retVal;
 }
 float Polynomial::Evaluate(float x)const{
-	return FLT_MAX;
+    float numberReturn = 0.0f;
+    for(size_t i = 0; i <= _degree; i++){
+        numberReturn += _coefficients[i] * pow(x, i); // using pow function from cmath
+    }
+    return numberReturn;
 }
 float Polynomial::Integrate(float start, float end)const{
-	return FLT_MAX;
+	float numberReturn = 0.0f;
+	Polynomial retVal(_degree + 1);
+	for(size_t i = 0; i <= _degree; i++){
+        retVal._coefficients[i + 1] = _coefficients[i] * 1 / (i + 1);
+	}
+	numberReturn = retVal.Evaluate(end) - retVal.Evaluate(start);
 }
+
 const Polynomial& Polynomial::operator=(const Polynomial& rhs){
 	if (&rhs == this){
 		return *this;
