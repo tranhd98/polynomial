@@ -1,3 +1,8 @@
+// Name: Hung Duc Tran
+// Class: CSC2431
+// Project: Polynomial functions
+// Description: create function with Arithmetic operators such as sum, subtract, divide, multiple, evaluate, derive, integrate. And create destructor.
+// Date: 04/19/2020
 #include "polynomial.h"
 
 #include <iostream>
